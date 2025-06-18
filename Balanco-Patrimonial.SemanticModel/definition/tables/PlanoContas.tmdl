@@ -1,0 +1,65 @@
+table PlanoContas
+	lineageTag: 223abc49-f7b0-4e14-b309-b3fc67d0734f
+
+	column ID_Conta
+		dataType: int64
+		formatString: 0
+		lineageTag: 3ae546af-5f96-44b5-9a9a-63db2538518a
+		summarizeBy: none
+		sourceColumn: ID_Conta
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tipo Relatório'
+		dataType: string
+		lineageTag: 4df61457-2bed-472e-b80d-758ab99ae7e0
+		summarizeBy: none
+		sourceColumn: Tipo Relatório
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Conta Nível 1'
+		dataType: string
+		lineageTag: dd23423f-de24-4ce9-9286-232bd20ec891
+		summarizeBy: none
+		sourceColumn: Conta Nível 1
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Conta Nível 2'
+		dataType: string
+		lineageTag: c9c67de4-1d00-45c4-9195-ea2f15fb08fa
+		summarizeBy: none
+		sourceColumn: Conta Nível 2
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Conta Nível 3'
+		dataType: string
+		lineageTag: 384a2158-e427-4ff5-a712-00a6ec1b6e1a
+		summarizeBy: none
+		sourceColumn: Conta Nível 3
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Conta Nível 4'
+		dataType: string
+		lineageTag: 3e917bb7-eafb-48d2-8829-288b72390892
+		summarizeBy: none
+		sourceColumn: Conta Nível 4
+
+		annotation SummarizationSetBy = Automatic
+
+	partition PlanoContas = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\LEAO\OneDrive\Documentos\DSA - Data Science Academy\Cap09\Dataset\Dataset.xlsx"), null, true),
+				    PlanoContas_Sheet = Fonte{[Item="PlanoContas",Kind="Sheet"]}[Data],
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(PlanoContas_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"ID_Conta", Int64.Type}, {"Tipo Relatório", type text}, {"Conta Nível 1", type text}, {"Conta Nível 2", type text}, {"Conta Nível 3", type text}, {"Conta Nível 4", type text}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_ResultType = Table
+
